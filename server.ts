@@ -289,7 +289,7 @@ Produce the resulting modified room photograph in the highest architectural phot
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`StudiAI Server running on port ${PORT}`);
+    console.log(`AMBIENTE AI Server running on port ${PORT}`);
   });
 }
 

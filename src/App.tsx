@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   Wand2,
   Loader2,
+  Sparkles,
 } from "lucide-react";
 
 export default function App() {
@@ -67,7 +68,9 @@ export default function App() {
       try {
         const res = await fetch("/api/health");
         const data = await res.json();
-        const storedKey = localStorage.getItem("studiai_gemini_key");
+        const storedKey =
+          localStorage.getItem("ambiente_gemini_key") ||
+          localStorage.getItem("studiai_gemini_key");
 
         setApiKeyStatus((prev) => ({
           ...prev,
@@ -94,7 +97,7 @@ export default function App() {
       });
       const data = await res.json();
       if (res.ok && data.valid) {
-        localStorage.setItem("studiai_gemini_key", key);
+        localStorage.setItem("ambiente_gemini_key", key);
         setApiKeyStatus((prev) => ({
           ...prev,
           customKey: key,
@@ -115,6 +118,7 @@ export default function App() {
 
   // Remove custom API key
   const handleRemoveApiKey = () => {
+    localStorage.removeItem("ambiente_gemini_key");
     localStorage.removeItem("studiai_gemini_key");
     setApiKeyStatus((prev) => ({
       ...prev,
@@ -174,7 +178,7 @@ export default function App() {
       }
 
       setRoomAnalysis(data);
-      setSuccessToast("Diagnóstico arquitetônico gerado com sucesso!");
+      setSuccessToast("Diagnóstico gerado com sucesso!");
       setTimeout(() => setSuccessToast(null), 3000);
     } catch (err: any) {
       console.error("Analysis error:", err);
@@ -296,7 +300,7 @@ export default function App() {
       : null;
 
   return (
-    <div className="min-h-screen bg-[#F4F4F5] text-slate-900 flex flex-col antialiased selection:bg-slate-900 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased selection:bg-slate-900 selection:text-white">
       {/* Top Navigation */}
       <Navbar
         apiKeyStatus={apiKeyStatus}
@@ -310,27 +314,27 @@ export default function App() {
 
       {/* Global Toast Notifications */}
       {successToast && (
-        <div className="fixed top-18 right-4 z-50 p-3.5 bg-white text-slate-900 border border-slate-900 shadow-xl flex items-center space-x-2.5 text-xs font-mono uppercase tracking-wider animate-in fade-in slide-in-from-top-3">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="fixed top-20 right-5 z-50 p-3.5 bg-slate-900 text-white rounded-xl shadow-2xl flex items-center space-x-2.5 text-xs font-medium animate-in fade-in slide-in-from-top-3 border border-slate-800">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
           <span>{successToast}</span>
         </div>
       )}
 
       {errorMessage && (
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 mt-4">
-          <div className="p-4 bg-white border-l-4 border-l-rose-600 border border-slate-200 text-slate-900 text-xs flex items-start justify-between space-x-3 shadow-xs">
+          <div className="p-4 bg-white border border-rose-200 rounded-xl text-slate-900 text-xs flex items-start justify-between space-x-3 shadow-xs">
             <div className="flex items-start space-x-2.5">
               <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
               <div>
-                <strong className="font-bold block uppercase text-[10px] tracking-wider text-rose-800">
+                <strong className="font-semibold block text-rose-700">
                   Atenção no Processamento
                 </strong>
-                <span className="text-slate-700">{errorMessage}</span>
+                <span className="text-slate-600">{errorMessage}</span>
               </div>
             </div>
             <button
               onClick={() => setErrorMessage(null)}
-              className="text-slate-500 hover:text-slate-900 text-xs font-mono uppercase tracking-wider px-2 py-0.5 border border-slate-200"
+              className="text-slate-400 hover:text-slate-900 text-xs px-2 py-1 rounded-md border border-slate-200"
             >
               Fechar
             </button>
@@ -339,13 +343,13 @@ export default function App() {
       )}
 
       {/* Main Workspace Area */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
         {!originalImage ? (
           /* Step 1: Upload or Choose Preset */
           <ImageUploader onSelectImage={handleSelectImage} />
         ) : (
           /* Step 2: Active Workspace with Editor & Comparisons */
-          <div className="space-y-6">
+          <div className="space-y-5">
             {/* Version History Drawer */}
             {showHistory && editHistory.length > 0 && (
               <VersionHistory
@@ -360,9 +364,9 @@ export default function App() {
             )}
 
             {/* Split Grid: Left (Editor & Diagnostics) | Right (Viewer & Comparisons) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
               {/* Left Column: Scene Prompt & Controls (5 cols) */}
-              <div className="lg:col-span-5 space-y-6">
+              <div className="lg:col-span-5 space-y-5">
                 <SceneEditor
                   currentPrompt={currentPrompt}
                   onChangePrompt={setCurrentPrompt}
@@ -394,22 +398,23 @@ export default function App() {
               {/* Right Column: Visual Comparison & Output (7 cols) */}
               <div className="lg:col-span-7 space-y-4">
                 {isGenerating ? (
-                  /* Loading State in Geometric Balance Style */
-                  <div className="relative w-full aspect-16/10 bg-[#EBEDF0] border border-slate-200 p-8 flex flex-col items-center justify-center text-center space-y-6 shadow-xs">
-                    <div className="absolute inset-0 opacity-20 pointer-events-none bg-grid-dots"></div>
-                    <div className="relative w-16 h-16 flex items-center justify-center bg-white border border-slate-300 shadow-xs">
-                      <Loader2 className="w-8 h-8 animate-spin text-slate-900" />
+                  /* Loading State */
+                  <div className="relative w-full aspect-16/10 rounded-2xl bg-slate-900 border border-slate-800 p-8 flex flex-col items-center justify-center text-center space-y-6 shadow-md overflow-hidden">
+                    <div className="absolute inset-0 opacity-10 pointer-events-none bg-grid-dots"></div>
+                    <div className="relative w-16 h-16 flex items-center justify-center bg-slate-800 rounded-2xl border border-slate-700 shadow-lg">
+                      <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
                     </div>
                     <div className="space-y-2 max-w-md z-10">
-                      <h3 className="text-xs font-bold uppercase tracking-widest text-slate-900">
-                        Processando Geometria do Ambiente
+                      <h3 className="text-sm font-semibold text-white tracking-wide">
+                        Renderizando Transformação do Ambiente
                       </h3>
-                      <p className="text-xs text-slate-600 font-mono">
-                        {generationStep || "Calculando perspectiva e iluminação com Gemini..."}
+                      <p className="text-xs text-slate-300 font-sans">
+                        {generationStep || "Calculando perspectiva, materiais e iluminação..."}
                       </p>
-                      <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider">
-                        Preservação estrutural • Ângulo focal travado
-                      </p>
+                      <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-800 text-[11px] text-slate-300 border border-slate-700">
+                        <Sparkles className="w-3 h-3 text-amber-400" />
+                        <span>Preservação estrutural e geométrica 1:1</span>
+                      </div>
                     </div>
                   </div>
                 ) : activeVersion ? (
@@ -423,8 +428,8 @@ export default function App() {
                   />
                 ) : (
                   /* Initial Room Preview with Guide Overlay */
-                  <div className="relative w-full aspect-16/10 sm:aspect-16/9 bg-[#EBEDF0] border border-slate-200 overflow-hidden shadow-xs group">
-                    <div className="absolute inset-0 opacity-20 pointer-events-none bg-grid-dots"></div>
+                  <div className="relative w-full aspect-16/10 sm:aspect-16/9 bg-slate-900 rounded-2xl border border-slate-200/80 overflow-hidden shadow-md group">
+                    <div className="absolute inset-0 opacity-10 pointer-events-none bg-grid-dots"></div>
                     <img
                       src={originalImage}
                       alt="Ambiente Selecionado"
@@ -433,20 +438,20 @@ export default function App() {
                     />
                     
                     {/* Top Tag */}
-                    <div className="absolute top-4 left-4 flex items-center space-x-2">
-                      <span className="bg-black/80 text-white text-[10px] font-bold px-2.5 py-1 uppercase tracking-widest">
-                        {activePreset ? activePreset.title : "Foto Original do Ambiente"}
+                    <div className="absolute top-3.5 left-3.5 flex items-center space-x-2">
+                      <span className="bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-white/10 shadow-xs">
+                        {activePreset ? activePreset.title : "Foto Original"}
                       </span>
                     </div>
 
                     {/* Bottom Guide Prompt */}
-                    <div className="absolute bottom-4 left-4 right-4 p-4 bg-white/95 backdrop-blur-xs border border-slate-200 text-xs text-slate-700 space-y-1 shadow-xs">
-                      <div className="font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5 text-[11px]">
-                        <Wand2 className="w-3.5 h-3.5" />
+                    <div className="absolute bottom-3.5 left-3.5 right-3.5 p-4 bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-xl text-xs text-slate-700 space-y-1 shadow-md">
+                      <div className="font-semibold text-slate-900 flex items-center space-x-1.5 text-xs">
+                        <Wand2 className="w-3.5 h-3.5 text-slate-800" />
                         <span>Pronto para Edição Fotorrealista</span>
                       </div>
                       <p className="text-[11px] text-slate-500 font-sans leading-relaxed">
-                        Descreva as alterações desejadas no painel ao lado (ex: troca de piso, novas cores, móveis ou luminárias) e clique em "Processar Imagem".
+                        Descreva as alterações desejadas no painel ao lado (ex: troca de pisos, novas cores, texturas, móveis ou luminárias) e clique em "Gerar Edição do Ambiente".
                       </p>
                     </div>
                   </div>
@@ -458,9 +463,9 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-slate-200 bg-white py-4 px-4 text-center text-xs text-slate-500 font-mono">
+      <footer className="w-full border-t border-slate-200/80 bg-white/80 backdrop-blur-md py-4 px-4 text-center text-xs text-slate-500 font-sans">
         <p>
-          ESTRUTURA • Plataforma de Edição Arquitetônica & Preservação Fotorrealista com Google Gemini
+          AMBIENTE AI • Plataforma de Edição Arquitetônica & Preservação Fotorrealista com Google Gemini
         </p>
       </footer>
 

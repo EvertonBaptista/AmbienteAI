@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import {
   Wand2,
   Sliders,
-  Send,
+  Sparkles,
   Loader2,
   ShieldCheck,
   Compass,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { QUICK_CATEGORIES } from "../data/presets";
 import { PreservationSettings } from "../types";
@@ -55,21 +57,21 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
   };
 
   return (
-    <div className="bg-white border border-slate-200 p-6 shadow-xs text-slate-900 space-y-6">
+    <div className="bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs text-slate-900 space-y-5">
       {/* Top Header & Analyze Trigger */}
       <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
         <div>
-          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
-            3. Instruções de Edição
-          </label>
-          <h2 className="text-sm font-bold text-slate-900">Prompt do Ambiente</h2>
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            Instruções de Edição
+          </span>
+          <h2 className="text-sm font-bold text-slate-900">Transformação do Ambiente</h2>
         </div>
 
         <button
           id="analyze-room-btn"
           onClick={onAnalyzeRoom}
           disabled={isAnalyzing || isGenerating}
-          className={`px-3 py-1.5 rounded-xs text-xs font-semibold border flex items-center gap-1.5 transition ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium border flex items-center gap-1.5 transition shadow-xs ${
             hasAnalysis
               ? "bg-slate-100 border-slate-300 text-slate-800 hover:bg-slate-200"
               : "bg-white border-slate-200 text-slate-800 hover:bg-slate-50"
@@ -78,12 +80,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
           {isAnalyzing ? (
             <>
               <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-900" />
-              <span className="text-[11px] uppercase tracking-wider font-mono">Analisando...</span>
+              <span className="text-[11px] font-medium">Analisando...</span>
             </>
           ) : (
             <>
               <Compass className="w-3.5 h-3.5 text-slate-700" />
-              <span className="text-[11px] uppercase tracking-wider font-mono">
+              <span className="text-[11px] font-medium">
                 {hasAnalysis ? "Recalcular Diagnóstico" : "Diagnosticar Espaço"}
               </span>
             </>
@@ -104,44 +106,44 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
                 onSubmitEdit();
               }
             }}
-            placeholder="Ex: Remova o tapete antigo e substitua por um tapete de fibras naturais. Adicione uma poltrona no canto direito mantendo a iluminação e perspectiva da janela..."
+            placeholder="Ex: Substituir piso por porcelanato marmorizado cinza claro. Instalar parede com ripado de madeira freijó e iluminação indireta de LED..."
             rows={3}
-            className="w-full p-3.5 bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-slate-400 font-sans text-slate-900 placeholder-slate-400 transition resize-none leading-relaxed"
+            className="w-full p-3.5 bg-slate-50/70 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 font-sans text-slate-900 placeholder-slate-400 transition resize-none leading-relaxed"
           />
           {currentPrompt && (
             <button
               onClick={() => onChangePrompt("")}
-              className="absolute top-2.5 right-2.5 text-[10px] uppercase font-bold text-slate-400 hover:text-slate-700 px-2 py-0.5 bg-white border border-slate-200"
+              className="absolute top-2.5 right-2.5 text-[10px] font-semibold text-slate-400 hover:text-slate-700 px-2 py-0.5 bg-white/90 rounded-md border border-slate-200 shadow-xs"
             >
               Limpar
             </button>
           )}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 font-mono">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
           <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-slate-900" />
-            <span className="text-[10px] uppercase">PERSPECTIVE & SHADOW GUARD ACTIVE</span>
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            <span className="text-[11px] font-medium text-slate-700">Geometria e luz preservadas</span>
           </div>
-          <span className="text-[10px]">Ctrl + Enter para gerar</span>
+          <span className="text-[10px] text-slate-400 font-mono">⌘ + Enter para gerar</span>
         </div>
       </div>
 
       {/* Quick Category Chips */}
       <div className="space-y-2.5 pt-1">
         <div className="flex items-center justify-between">
-          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-            Adições Rápidas de Materiais & Elementos:
+          <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            Sugestões Rápidas:
           </label>
           {/* Category Tabs */}
-          <div className="flex items-center space-x-1 overflow-x-auto pb-1 max-w-[65%]">
+          <div className="flex items-center space-x-1 overflow-x-auto pb-1 max-w-[70%]">
             {QUICK_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategoryTab(cat.id)}
-                className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider transition shrink-0 ${
+                className={`px-2.5 py-0.5 text-[10px] font-semibold rounded-md uppercase tracking-wider transition shrink-0 ${
                   selectedCategoryTab === cat.id
-                    ? "bg-slate-900 text-white"
+                    ? "bg-slate-900 text-white shadow-xs"
                     : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >
@@ -158,9 +160,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
               key={index}
               id={`quick-item-${index}`}
               onClick={() => handleAppendPrompt(item.prompt)}
-              className="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-400 text-slate-700 text-xs transition flex items-center gap-1"
+              className="px-2.5 py-1 bg-slate-50 hover:bg-white border border-slate-200 hover:border-slate-400 rounded-lg text-slate-700 text-xs transition flex items-center gap-1 shadow-xs"
             >
-              <span className="text-slate-400 font-mono">+</span>
+              <span className="text-slate-400 font-medium">+</span>
               <span>{item.label}</span>
             </button>
           ))}
@@ -168,24 +170,29 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
       </div>
 
       {/* Settings & Quality Controls */}
-      <div className="pt-2 border-t border-slate-100 space-y-4">
+      <div className="pt-2 border-t border-slate-100 space-y-3">
         <div className="flex items-center justify-between">
           <button
             onClick={() => setShowAdvanced(!showAdvanced)}
-            className="text-xs font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition uppercase tracking-wider text-[11px]"
+            className="text-xs font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition"
           >
             <Sliders className="w-3.5 h-3.5 text-slate-500" />
-            <span>Configurações Avançadas</span>
+            <span>Ajustes Avançados</span>
+            {showAdvanced ? (
+              <ChevronUp className="w-3 h-3 text-slate-400" />
+            ) : (
+              <ChevronDown className="w-3 h-3 text-slate-400" />
+            )}
           </button>
 
           <div className="flex items-center space-x-2">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Qualidade:</span>
-            <div className="flex items-center border border-slate-200 bg-slate-50 p-0.5 text-xs">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Qualidade:</span>
+            <div className="flex items-center border border-slate-200 bg-slate-100/80 p-0.5 rounded-lg text-xs">
               <button
                 onClick={() => onChangeQuality("high")}
-                className={`px-2 py-0.5 text-[10px] uppercase font-bold transition ${
+                className={`px-2.5 py-0.5 text-[10px] font-bold rounded-md transition ${
                   imageQuality === "high"
-                    ? "bg-slate-900 text-white"
+                    ? "bg-white text-slate-900 shadow-xs"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -193,9 +200,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
               </button>
               <button
                 onClick={() => onChangeQuality("fast")}
-                className={`px-2 py-0.5 text-[10px] uppercase font-bold transition ${
+                className={`px-2.5 py-0.5 text-[10px] font-bold rounded-md transition ${
                   imageQuality === "fast"
-                    ? "bg-slate-900 text-white"
+                    ? "bg-white text-slate-900 shadow-xs"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -206,20 +213,20 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
         </div>
 
         {showAdvanced && (
-          <div className="p-4 bg-slate-50 border border-slate-200 space-y-4 text-xs animate-in fade-in duration-200">
+          <div className="p-4 bg-slate-50/70 border border-slate-200/80 rounded-xl space-y-4 text-xs animate-in fade-in duration-200">
             {/* Aspect Ratio */}
             <div>
-              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
-                Proporção da Imagem (Aspect Ratio)
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                Proporção da Imagem
               </label>
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-5 gap-1.5">
                 {(["1:1", "4:3", "16:9", "3:4", "9:16"] as const).map((ratio) => (
                   <button
                     key={ratio}
                     onClick={() => onChangeAspectRatio(ratio)}
-                    className={`py-1.5 px-1 text-center font-mono text-xs font-bold transition border ${
+                    className={`py-1.5 px-1 text-center font-mono text-xs font-semibold rounded-lg transition border ${
                       aspectRatio === ratio
-                        ? "bg-slate-900 text-white border-slate-900"
+                        ? "bg-slate-900 text-white border-slate-900 shadow-xs"
                         : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100"
                     }`}
                   >
@@ -230,12 +237,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
             </div>
 
             {/* Preservation Toggles */}
-            <div className="pt-2 border-t border-slate-200 space-y-2">
-              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Travamento Estrutural & Geométrico
+            <div className="pt-2 border-t border-slate-200/80 space-y-2">
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                Travamento Estrutural & Coerência
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <label className="flex items-center space-x-2 p-2 bg-white border border-slate-200 text-slate-800 cursor-pointer text-xs">
+                <label className="flex items-center space-x-2 p-2.5 bg-white rounded-lg border border-slate-200 text-slate-800 cursor-pointer text-xs shadow-xs">
                   <input
                     type="checkbox"
                     checked={preservationSettings.preservePerspective}
@@ -245,12 +252,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
                         preservePerspective: e.target.checked,
                       })
                     }
-                    className="accent-slate-900"
+                    className="accent-slate-900 rounded"
                   />
                   <span>Travar perspectiva e pontos de fuga</span>
                 </label>
 
-                <label className="flex items-center space-x-2 p-2 bg-white border border-slate-200 text-slate-800 cursor-pointer text-xs">
+                <label className="flex items-center space-x-2 p-2.5 bg-white rounded-lg border border-slate-200 text-slate-800 cursor-pointer text-xs shadow-xs">
                   <input
                     type="checkbox"
                     checked={preservationSettings.preserveLighting}
@@ -260,12 +267,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
                         preserveLighting: e.target.checked,
                       })
                     }
-                    className="accent-slate-900"
+                    className="accent-slate-900 rounded"
                   />
-                  <span>Preservar iluminação e direção das sombras</span>
+                  <span>Preservar iluminação e sombras</span>
                 </label>
 
-                <label className="flex items-center space-x-2 p-2 bg-white border border-slate-200 text-slate-800 cursor-pointer text-xs">
+                <label className="flex items-center space-x-2 p-2.5 bg-white rounded-lg border border-slate-200 text-slate-800 cursor-pointer text-xs shadow-xs">
                   <input
                     type="checkbox"
                     checked={preservationSettings.preserveStructuralGeometry}
@@ -275,12 +282,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
                         preserveStructuralGeometry: e.target.checked,
                       })
                     }
-                    className="accent-slate-900"
+                    className="accent-slate-900 rounded"
                   />
                   <span>Manter janelas, portas e paredes</span>
                 </label>
 
-                <label className="flex items-center space-x-2 p-2 bg-white border border-slate-200 text-slate-800 cursor-pointer text-xs">
+                <label className="flex items-center space-x-2 p-2.5 bg-white rounded-lg border border-slate-200 text-slate-800 cursor-pointer text-xs shadow-xs">
                   <input
                     type="checkbox"
                     checked={preservationSettings.preserveScale}
@@ -290,9 +297,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
                         preserveScale: e.target.checked,
                       })
                     }
-                    className="accent-slate-900"
+                    className="accent-slate-900 rounded"
                   />
-                  <span>Garantir escala ergonômica de mobília</span>
+                  <span>Garantir escala ergonômica 1:1</span>
                 </label>
               </div>
             </div>
@@ -300,22 +307,22 @@ export const SceneEditor: React.FC<SceneEditorProps> = ({
         )}
       </div>
 
-      {/* Main Submit Button matching Geometric Balance Theme */}
+      {/* Main Submit Button */}
       <button
         id="generate-scene-button"
         onClick={onSubmitEdit}
         disabled={isGenerating || !currentPrompt.trim()}
-        className="w-full py-4 bg-slate-900 text-white font-bold text-xs uppercase tracking-[0.2em] hover:bg-slate-800 transition-all shadow-md flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
       >
         {isGenerating ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin text-white" />
-            <span>Processando Geometria...</span>
+            <span>Processando Transformação...</span>
           </>
         ) : (
           <>
-            <Wand2 className="w-4 h-4" />
-            <span>Processar Imagem</span>
+            <Wand2 className="w-4 h-4 text-amber-400" />
+            <span>Gerar Edição do Ambiente</span>
           </>
         )}
       </button>

@@ -1,5 +1,5 @@
 {
-  "name": "StudiAI - Edição de Ambientes",
+  "name": "AMBIENTE AI - Edição & Design de Espaços",
   "description": "Edição arquitetônica fotorrealista e transformação de ambientes preservando perspectiva, escala e iluminação original com IA.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

@@ -37,7 +37,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
       if (success) {
         setFeedback({
           type: "success",
-          message: "Chave da API Gemini conectada e validada com sucesso!",
+          message: "Chave Gemini conectada e validada com sucesso!",
         });
         setTimeout(() => {
           onClose();
@@ -63,72 +63,72 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
     onRemoveKey();
     setFeedback({
       type: "success",
-      message: "Chave customizada removida. O sistema usará a chave do ambiente se disponível.",
+      message: "Chave customizada removida. O sistema usará a chave do servidor se disponível.",
     });
   };
 
   return (
     <div
       id="api-key-modal-overlay"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
       onClick={onClose}
     >
       <div
         id="api-key-modal-card"
-        className="relative w-full max-w-lg bg-white border border-slate-200 p-6 shadow-2xl text-slate-900"
+        className="relative w-full max-w-lg bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-2xl text-slate-900"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           id="api-key-modal-close"
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-900 transition border border-slate-200"
+          className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
           aria-label="Fechar"
         >
           <X className="w-4 h-4" />
         </button>
 
-        <div className="flex items-center space-x-3 mb-4">
-          <div className="p-2.5 bg-slate-100 text-slate-900 border border-slate-300">
+        <div className="flex items-center space-x-3 mb-5">
+          <div className="p-2.5 bg-slate-900 text-white rounded-xl shadow-xs">
             <Key className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold uppercase tracking-wider">Chave da API Gemini</h2>
-            <p className="text-xs text-slate-500 font-mono">
-              Configuração de credencial para renderização fotorrealista
+            <h2 className="text-base font-bold tracking-tight">Chave da API Gemini</h2>
+            <p className="text-xs text-slate-500 font-sans">
+              Credencial para geração fotorrealista com Google Gemini 3.7
             </p>
           </div>
         </div>
 
         {/* Current status banner */}
-        <div className="mb-6 p-3.5 bg-slate-50 border border-slate-200 flex items-start space-x-3">
+        <div className="mb-5 p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl flex items-start space-x-3">
           {apiKeyStatus.customKey ? (
-            <CheckCircle2 className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
           ) : apiKeyStatus.hasEnvKey ? (
-            <ShieldCheck className="w-4 h-4 text-slate-900 shrink-0 mt-0.5" />
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
+            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           )}
-          <div className="text-xs space-y-1">
-            <div className="font-bold text-slate-900 uppercase text-[10px] tracking-wider font-mono">
+          <div className="text-xs space-y-0.5">
+            <div className="font-semibold text-slate-900 text-xs">
               {apiKeyStatus.customKey
                 ? "Chave personalizada ativa"
                 : apiKeyStatus.hasEnvKey
-                ? "Chave padrão do servidor ativa"
+                ? "Chave padrão do servidor conectada"
                 : "Nenhuma chave configurada"}
             </div>
-            <p className="text-slate-600 leading-relaxed">
+            <p className="text-slate-600 leading-relaxed text-xs">
               {apiKeyStatus.customKey
-                ? `Usando chave personalizada vinculada ao seu navegador (...${apiKeyStatus.customKey.slice(-6)}).`
+                ? `Usando chave salva no seu navegador (...${apiKeyStatus.customKey.slice(-6)}).`
                 : apiKeyStatus.hasEnvKey
-                ? "O servidor possui uma chave de ambiente configurada automaticamente."
-                : "Insira sua chave do Google AI Studio para ativar as transformações fotorrealistas."}
+                ? "O servidor possui uma chave de ambiente GEMINI_API_KEY ativa."
+                : "Insira sua chave do Google AI Studio para ativar as transformações."}
             </p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
               Sua Chave de API (Gemini API Key)
             </label>
             <div className="relative">
@@ -138,10 +138,10 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
                 value={inputKey}
                 onChange={(e) => setInputKey(e.target.value)}
                 placeholder="AIzaSy..."
-                className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-400 font-mono text-slate-900 placeholder-slate-400"
+                className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 font-mono text-slate-900 placeholder-slate-400 transition"
               />
             </div>
-            <p className="text-xs text-slate-500 mt-1.5 flex items-center space-x-1.5 font-mono">
+            <p className="text-xs text-slate-500 mt-1.5 flex items-center space-x-1.5">
               <span>Obtenha sua chave gratuita em</span>
               <a
                 href="https://aistudio.google.com/app/apikey"
@@ -157,16 +157,16 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
 
           {feedback && (
             <div
-              className={`p-3 text-xs flex items-center space-x-2 border ${
+              className={`p-3 text-xs flex items-center space-x-2 rounded-xl border ${
                 feedback.type === "success"
-                  ? "bg-slate-100 text-slate-900 border-slate-400"
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-200"
                   : "bg-rose-50 text-rose-800 border-rose-200"
               }`}
             >
               {feedback.type === "success" ? (
-                <CheckCircle2 className="w-4 h-4 shrink-0 text-slate-900" />
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
               ) : (
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-700" />
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
               )}
               <span>{feedback.message}</span>
             </div>
@@ -178,7 +178,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
                 type="button"
                 id="remove-api-key-button"
                 onClick={handleClear}
-                className="px-3 py-2 text-[11px] font-mono uppercase tracking-wider text-rose-700 hover:bg-rose-50 border border-rose-200 transition"
+                className="px-3 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 rounded-lg transition"
               >
                 Remover Chave
               </button>
@@ -189,7 +189,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
                 type="button"
                 id="cancel-api-key-modal"
                 onClick={onClose}
-                className="px-4 py-2 text-[11px] uppercase tracking-wider font-bold text-slate-600 hover:bg-slate-100 border border-slate-200 transition"
+                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg border border-slate-200 transition"
               >
                 Fechar
               </button>
@@ -197,7 +197,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
                 type="submit"
                 id="save-api-key-button"
                 disabled={isSubmitting || !inputKey.trim()}
-                className="px-5 py-2 text-[11px] uppercase tracking-widest font-bold bg-slate-900 hover:bg-slate-800 text-white transition disabled:opacity-50 flex items-center space-x-2 shadow-xs"
+                className="px-5 py-2 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white rounded-lg transition disabled:opacity-50 flex items-center space-x-2 shadow-xs"
               >
                 {isSubmitting ? (
                   <>
